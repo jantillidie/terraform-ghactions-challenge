@@ -8,13 +8,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: us-west-2
     steps:
       - uses: actions/checkout@v3
-
-      - uses: kciter/terraform-apply-for-aws-action@v3
-        with:
-          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: us-west-2
-          path: .
+      - name: Deploy website with terraform to aws
+        run: |
+          echo "start upload to aws"
+          terraform init
+          terraform plan
+          terraform apply -y
